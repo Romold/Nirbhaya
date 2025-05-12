@@ -133,7 +133,7 @@
 #             st.markdown('<div class="feature-title">Galaxy Classification</div>', unsafe_allow_html=True)
 #             st.markdown('<div class="feature-desc">Predict galaxy types and redshifts with ML models.</div>', unsafe_allow_html=True)
 #             if st.button("Explore Classifier", key="classifier"):
-#                 st.session_state['nav'] = "Galaxy Classifier & Redshift Predictor"
+#                 st.session_state['nav'] = "Romold"
 #             st.markdown('</div>', unsafe_allow_html=True)
 
 #     with col2:
@@ -143,7 +143,7 @@
 #             st.markdown('<div class="feature-title">Cluster Analysis</div>', unsafe_allow_html=True)
 #             st.markdown('<div class="feature-desc">Analyze spatial clustering of galaxies and clusters.</div>', unsafe_allow_html=True)
 #             if st.button("Explore Clustering", key="clustering"):
-#                 st.session_state['nav'] = "Galaxy Cluster Analysis"
+#                 st.session_state['nav'] = "Tharindu"
 #             st.markdown('</div>', unsafe_allow_html=True)
 
 #     with col3:
@@ -153,7 +153,7 @@
 #             st.markdown('<div class="feature-title">Globular Analysis</div>', unsafe_allow_html=True)
 #             st.markdown('<div class="feature-desc">Detect and study globular clusters in galaxies.</div>', unsafe_allow_html=True)
 #             if st.button("Explore Globulars", key="globular"):
-#                 st.session_state['nav'] = "Globular Cluster Analysis"
+#                 st.session_state['nav'] = "Pasindu"
 #             st.markdown('</div>', unsafe_allow_html=True)
 
 #     with col4:
@@ -163,7 +163,7 @@
 #             st.markdown('<div class="feature-title">Image Enhancer</div>', unsafe_allow_html=True)
 #             st.markdown('<div class="feature-desc">Upscale galaxy images using deep learning GANs.</div>', unsafe_allow_html=True)
 #             if st.button("Explore Enhancer", key="enhancer"):
-#                 st.session_state['nav'] = "Galaxy Image Resolution Enhancer"
+#                 st.session_state['nav'] = "Ransika"
 #             st.markdown('</div>', unsafe_allow_html=True)
 
 # add_bg_from_local("bg-7.jpg")
@@ -244,63 +244,63 @@ def home_page():
         with st.container():
             st.markdown('<div class="feature-box">', unsafe_allow_html=True)
             st.image("classification.png", width=60)
-            st.markdown('<div class="feature-title">Galaxy Classification</div>', unsafe_allow_html=True)
+            st.markdown('<div class="feature-title">DDoS Classification</div>', unsafe_allow_html=True)
             st.markdown('<div class="feature-desc">Predict galaxy types and redshifts with ML models.</div>', unsafe_allow_html=True)
             if st.button("Explore Classifier", key="classifier"):
-                st.session_state['nav'] = "Galaxy Classifier & Redshift Predictor"
+                st.session_state['nav'] = "Romold"
             st.markdown('</div>', unsafe_allow_html=True)
 
     with col2:
         with st.container():
             st.markdown('<div class="feature-box">', unsafe_allow_html=True)
             st.image("clustering.png", width=60)
-            st.markdown('<div class="feature-title">Cluster Analysis</div>', unsafe_allow_html=True)
+            st.markdown('<div class="feature-title">Tharindu Component</div>', unsafe_allow_html=True)
             st.markdown('<div class="feature-desc">Analyze spatial clustering of galaxies and clusters.</div>', unsafe_allow_html=True)
             if st.button("Explore Clustering", key="clustering"):
-                st.session_state['nav'] = "Galaxy Cluster Analysis"
+                st.session_state['nav'] = "Tharindu"
             st.markdown('</div>', unsafe_allow_html=True)
 
     with col3:
         with st.container():
             st.markdown('<div class="feature-box">', unsafe_allow_html=True)
             st.image("globular.png", width=60)
-            st.markdown('<div class="feature-title">Globular Analysis</div>', unsafe_allow_html=True)
+            st.markdown('<div class="feature-title">Pasindu Component</div>', unsafe_allow_html=True)
             st.markdown('<div class="feature-desc">Detect and study globular clusters in galaxies.</div>', unsafe_allow_html=True)
             if st.button("Explore Globulars", key="globular"):
-                st.session_state['nav'] = "Globular Cluster Analysis"
+                st.session_state['nav'] = "Pasindu"
             st.markdown('</div>', unsafe_allow_html=True)
 
     with col4:
         with st.container():
             st.markdown('<div class="feature-box">', unsafe_allow_html=True)
             st.image("enhancer.png", width=60)
-            st.markdown('<div class="feature-title">Image Enhancer</div>', unsafe_allow_html=True)
+            st.markdown('<div class="feature-title">Ransika Component</div>', unsafe_allow_html=True)
             st.markdown('<div class="feature-desc">Upscale galaxy images using deep learning GANs.</div>', unsafe_allow_html=True)
             if st.button("Explore Enhancer", key="enhancer"):
-                st.session_state['nav'] = "Galaxy Image Resolution Enhancer"
+                st.session_state['nav'] = "Ransika"
             st.markdown('</div>', unsafe_allow_html=True)
 
 # Dummy feature pages (replace with your actual content)
 def galaxy_classifier():
-    st.title("Galaxy Classifier & Redshift Predictor")
+    st.title("DDoS")
     st.write("🚀 This is a placeholder for the galaxy classification page.")
     if st.button("🔙 Back to Home"):
         st.session_state['nav'] = "Home"
 
 def galaxy_clustering():
-    st.title("Galaxy Cluster Analysis")
+    st.title("Tharindus")
     st.write("🧠 This is a placeholder for the clustering page.")
     if st.button("🔙 Back to Home"):
         st.session_state['nav'] = "Home"
 
 def globular_clusters():
-    st.title("Globular Cluster Analysis")
+    st.title("Pasindu")
     st.write("✨ This is a placeholder for the globular analysis page.")
     if st.button("🔙 Back to Home"):
         st.session_state['nav'] = "Home"
 
 def image_enhancer():
-    st.title("Galaxy Image Resolution Enhancer")
+    st.title("Ransika")
     st.write("🔍 This is a placeholder for the GAN-based enhancer.")
     if st.button("🔙 Back to Home"):
         st.session_state['nav'] = "Home"
@@ -311,11 +311,11 @@ app_mode = st.session_state.get("nav", "Home")
 
 if app_mode == "Home":
     home_page()
-elif app_mode == "Galaxy Classifier & Redshift Predictor":
+elif app_mode == "Romold":
     galaxy_classifier()
-elif app_mode == "Galaxy Cluster Analysis":
+elif app_mode == "Tharindu":
     galaxy_clustering()
-elif app_mode == "Globular Cluster Analysis":
+elif app_mode == "Pasindu":
     globular_clusters()
-elif app_mode == "Galaxy Image Resolution Enhancer":
+elif app_mode == "Ransika":
     image_enhancer()
