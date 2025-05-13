@@ -178,6 +178,7 @@ import zipfile
 import smtplib
 from email.message import EmailMessage
 import os
+from pathlib import Path
 
 # Set page config
 st.set_page_config(
@@ -185,6 +186,8 @@ st.set_page_config(
     layout="wide",
     page_icon="gs-page-logo.png",
 )
+
+models_dir = Path(__file__).parent / "models"
 
 # Add background image
 def add_bg_from_local(image_file):
@@ -308,19 +311,20 @@ def anomaly_detection():
     DEVELOPER_EMAIL = "tharindusahan11@gmail.com"
 
     # Load models and thresholds
-    with open('F:\\Nirbhayaa_Web_App\\models\\angle_scaler.pkl', 'rb') as f:
+    with open( models_dir /'angle_scaler.pkl', 'rb') as f:
         angle_scaler = pickle.load(f)
-    with open('F:\\Nirbhayaa_Web_App\\models\\angle_threshold.pkl', 'rb') as f:
+
+    with open(models_dir/'angle_threshold.pkl', 'rb') as f:
         angle_threshold = pickle.load(f)
 
-    with open('F:\\Nirbhayaa_Web_App\\models\\speed_scaler.pkl', 'rb') as f:
+    with open(models_dir/'speed_scaler.pkl', 'rb') as f:
         speed_scaler = pickle.load(f)
-    with open('F:\\Nirbhayaa_Web_App\\models\\speed_threshold.pkl', 'rb') as f:
+    with open(models_dir/'speed_threshold.pkl', 'rb') as f:
         speed_threshold = pickle.load(f)
 
-    with open('F:\\Nirbhayaa_Web_App\\models\\accl_scaler.pkl', 'rb') as f:
+    with open(models_dir/'accl_scaler.pkl', 'rb') as f:
         acceleration_scaler = pickle.load(f)
-    with open('F:\\Nirbhayaa_Web_App\\models\\accl_threshold.pkl', 'rb') as f:
+    with open(models_dir/'accl_threshold.pkl', 'rb') as f:
         acceleration_threshold = pickle.load(f)
 
     # Anomaly detection functions
