@@ -187,9 +187,9 @@ import pickle
 
 # Set page config
 st.set_page_config(
-    page_title="Nirbhaya",
+    page_title="Nirbhayaa",
     layout="wide",
-    page_icon="gs-page-logo.png",
+    page_icon="Nirbhayaa.jpg",
 )
 
 models_dir = Path(__file__).parent / "models"
@@ -477,7 +477,7 @@ def image_enhancer():
         st.session_state['nav'] = "Home"
 
 # Load background + route based on nav
-add_bg_from_local("bg-7.jpg")
+add_bg_from_local("background.png")
 app_mode = st.session_state.get("nav", "Home")
 
 if app_mode == "Home":
