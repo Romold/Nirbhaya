@@ -179,6 +179,11 @@ import smtplib
 from email.message import EmailMessage
 import os
 from pathlib import Path
+import streamlit as st
+from tensorflow import keras
+from keras import datasets, layers, models
+import numpy as np
+import pickle
 
 # Set page config
 st.set_page_config(
@@ -255,7 +260,7 @@ def home_page():
             st.markdown('<div class="feature-box">', unsafe_allow_html=True)
             st.image("classification.png", width=60)
             st.markdown('<div class="feature-title">DDoS Classification</div>', unsafe_allow_html=True)
-            st.markdown('<div class="feature-desc">Predict galaxy types and redshifts with ML models.</div>', unsafe_allow_html=True)
+            st.markdown('<div class="feature-desc">Predict whether the network flow is associated with DDoS or Not.</div>', unsafe_allow_html=True)
             if st.button("Explore Classifier", key="classifier"):
                 st.session_state['nav'] = "Romold"
             st.markdown('</div>', unsafe_allow_html=True)
@@ -291,11 +296,45 @@ def home_page():
             st.markdown('</div>', unsafe_allow_html=True)
 
 # Dummy feature pages (replace with your actual content)
-def galaxy_classifier():
-    st.title("DDoS")
-    st.write("🚀 This is a placeholder for the galaxy classification page.")
+
+
+def ddos_classifier():
+    st.title("DDoS Detection System 🚀")
+    st.write("Provide the input values for the **Top 10 SHAP Features** below:")
+
+    # Load saved model and scaler
+    model = models.load_model("models/transformer_top10_model.h5")
+    with open(models_dir/"scaler_ddos.pkl", "rb") as f:
+        scaler = pickle.load(f)
+    with open(models_dir/"top10_features.pkl", "rb") as f:
+        top_10_feature_names = pickle.load(f)
+
+    # User Inputs for 10 features
+    user_input = {}
+    for feature in top_10_feature_names:
+        user_input[feature] = st.number_input(f"{feature}", value=0.0)
+
+    # Predict button
+    if st.button("🚨 Predict DDoS Attack"):
+        # Convert to array
+        input_values = np.array([list(user_input.values())])
+
+        # Scale and reshape
+        input_scaled = scaler.transform(input_values)
+        input_reshaped = np.expand_dims(input_scaled, axis=2)
+
+        # Predict
+        prediction = model.predict(input_reshaped)[0][0]
+
+        if prediction >= 0.5:
+            st.error(f"⚠️ DDoS Attack Detected! Probability: {prediction:.2f}")
+        else:
+            st.success(f"✅ Normal Traffic. Probability: {1 - prediction:.2f}")
+
+    # Navigation
     if st.button("🔙 Back to Home"):
         st.session_state['nav'] = "Home"
+
 
 
 ## Anomaly Detection Page
@@ -444,7 +483,7 @@ app_mode = st.session_state.get("nav", "Home")
 if app_mode == "Home":
     home_page()
 elif app_mode == "Romold":
-    galaxy_classifier()
+    ddos_classifier()
 elif app_mode == "Tharindu":
     anomaly_detection()
 elif app_mode == "Pasindu":
