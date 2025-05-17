@@ -1,0 +1,20 @@
+[33md7d24b1[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mDDoSPage[m[33m, [m[1;31morigin/DDoSPage[m[33m)[m Merge branch 'main' into DDoSPage
+[33m040e570[m WIP : Added some new UI features for the branch
+[33mcc02cf3[m[33m ([m[1;31morigin/main[m[33m, [m[1;32mmain[m[33m)[m Merge pull request #4 from Romold/Lidar_spoofing
+[33ma4e6618[m second commit
+[33mc6eba1e[m Merge branch 'main' of https://github.com/Romold/Nirbhaya into Lidar_spoofing
+[33mb7f5b09[m my first commit
+[33maa2983a[m Merge pull request #3 from Romold/camera_spoofing_attacks
+[33m350eee7[m changed font color to white
+[33m140fb55[m camera spoofing adversarial attacks detection component is added
+[33mdd13c2c[m added some aditional libraries to requirements txt file
+[33mb492d90[m did some initial changes in ui
+[33mc797d49[m Merge pull request #2 from Romold/anomaly_detection
+[33m1367428[m new bg added
+[33m5f4115b[m WIP :- Finished Backend functionality. Frontend needs work
+[33m37b936d[m Finished implementing path to the system
+[33m2744204[m Merge pull request #1 from Romold/anomaly_detection
+[33mf50fa98[m Anomaly Detection System
+[33m0bcd90b[m Made some Changes with the names
+[33m89a8595[m Update README.md
+[33mae51c51[m Initial commit
