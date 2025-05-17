@@ -295,46 +295,86 @@ def home_page():
                 st.session_state['nav'] = "Ransika"
             st.markdown('</div>', unsafe_allow_html=True)
 
-# Dummy feature pages (replace with your actual content)
+# def ddos_classifier(): #Default background
+#     st.title("DDoS Detection System 🚀")
+#     st.write("Provide the input values for the **Top 10 SHAP Features** below:")
 
+#     # Load saved model and scaler
+#     model = models.load_model("models/transformer_top10_model.h5")
+#     with open(models_dir/"scaler_ddos.pkl", "rb") as f:
+#         scaler = pickle.load(f)
+#     with open(models_dir/"top10_features.pkl", "rb") as f:
+#         top_10_feature_names = pickle.load(f)
+
+#     # User Inputs for 10 features
+#     user_input = {}
+#     for feature in top_10_feature_names:
+#         user_input[feature] = st.number_input(f"{feature}", value=0.0)
+
+#     # Predict button
+#     if st.button("🚨 Predict DDoS Attack"):
+#         # Convert to array
+#         input_values = np.array([list(user_input.values())])
+
+#         # Scale and reshape
+#         input_scaled = scaler.transform(input_values)
+#         input_reshaped = np.expand_dims(input_scaled, axis=2)
+
+#         # Predict
+#         prediction = model.predict(input_reshaped)[0][0]
+
+#         if prediction >= 0.5:
+#             st.error(f"⚠️ DDoS Attack Detected! Probability: {prediction:.2f}")
+#         else:
+#             st.success(f"✅ Normal Traffic. Probability: {1 - prediction:.2f}")
+
+#     # Navigation
+#     if st.button("🔙 Back to Home"):
+#         st.session_state['nav'] = "Home"
 
 def ddos_classifier():
-    st.title("DDoS Detection System 🚀")
-    st.write("Provide the input values for the **Top 10 SHAP Features** below:")
+    # Sidebar Navigation (only shown inside this page)
+    page = st.sidebar.radio("📂 Pages", ["Main", "Testing 1", "Testing 2", "Testing 3"])
 
-    # Load saved model and scaler
-    model = models.load_model("models/transformer_top10_model.h5")
-    with open(models_dir/"scaler_ddos.pkl", "rb") as f:
-        scaler = pickle.load(f)
-    with open(models_dir/"top10_features.pkl", "rb") as f:
-        top_10_feature_names = pickle.load(f)
+    if page == "Main":
+        st.markdown("<h1 style='text-align:center;'>DDoS Detection System 🚀</h1>", unsafe_allow_html=True)
+        st.markdown("<h4 style='text-align:center;'>Provide the input values for the Top 10 SHAP Features below:</h4>", unsafe_allow_html=True)
 
-    # User Inputs for 10 features
-    user_input = {}
-    for feature in top_10_feature_names:
-        user_input[feature] = st.number_input(f"{feature}", value=0.0)
+        # Load model & data
+        model = models.load_model(models_dir / "transformer_top10_model.h5")
+        with open(models_dir / "scaler_ddos.pkl", "rb") as f:
+            scaler = pickle.load(f)
+        with open(models_dir / "top10_features.pkl", "rb") as f:
+            top_10_feature_names = pickle.load(f)
 
-    # Predict button
-    if st.button("🚨 Predict DDoS Attack"):
-        # Convert to array
-        input_values = np.array([list(user_input.values())])
-
-        # Scale and reshape
-        input_scaled = scaler.transform(input_values)
-        input_reshaped = np.expand_dims(input_scaled, axis=2)
+        # Inputs
+        user_input = {}
+        for feature in top_10_feature_names:
+            user_input[feature] = st.number_input(f"{feature}", value=0.0)
 
         # Predict
-        prediction = model.predict(input_reshaped)[0][0]
+        if st.button("🚨 Predict DDoS Attack"):
+            input_values = np.array([list(user_input.values())])
+            input_scaled = scaler.transform(input_values)
+            input_reshaped = np.expand_dims(input_scaled, axis=2)
+            prediction = model.predict(input_reshaped)[0][0]
 
-        if prediction >= 0.5:
-            st.error(f"⚠️ DDoS Attack Detected! Probability: {prediction:.2f}")
-        else:
-            st.success(f"✅ Normal Traffic. Probability: {1 - prediction:.2f}")
+            if prediction >= 0.5:
+                st.error(f"⚠️ DDoS Attack Detected! Probability: {prediction:.2f}")
+            else:
+                st.success(f"✅ Normal Traffic. Probability: {1 - prediction:.2f}")
 
-    # Navigation
-    if st.button("🔙 Back to Home"):
-        st.session_state['nav'] = "Home"
+        if st.button("🔙 Back to Home"):
+            st.session_state['nav'] = "Home"
 
+    elif page == "Testing 1":
+        st.success("🧪 Testing 1 Success")
+
+    elif page == "Testing 2":
+        st.success("🧪 Testing 2 Success")
+
+    elif page == "Testing 3":
+        st.success("🧪 Testing 3 Success")
 
 
 ## Anomaly Detection Page
