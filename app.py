@@ -356,12 +356,12 @@ def ddos_classifier():
         st.markdown("<h1 style='text-align:center;'>DDoS Detection System 🚀</h1>", unsafe_allow_html=True)
         st.markdown("<h4 style='text-align:center;'>Provide the input values for the Top 10 SHAP Features below:</h4>", unsafe_allow_html=True)
 
-    # Load saved model and scaler
-    model = load_model( models_dir /"transformer_top10_model.h5")
-    with open(models_dir/"scaler_ddos.pkl", "rb") as f:
-        scaler = pickle.load(f)
-    with open(models_dir/"top10_features.pkl", "rb") as f:
-        top_10_feature_names = pickle.load(f)
+        # Load saved model and scaler
+        model = load_model(models_dir / "transformer_top10_model.h5")
+        with open(models_dir / "scaler_ddos.pkl", "rb") as f:
+            scaler = pickle.load(f)
+        with open(models_dir / "top10_features.pkl", "rb") as f:
+            top_10_feature_names = pickle.load(f)
 
         # Inputs
         user_input = {}
@@ -391,6 +391,7 @@ def ddos_classifier():
 
     elif page == "Testing 3":
         st.success("🧪 Testing 3 Success")
+
 
 
 ## Anomaly Detection Page
