@@ -182,6 +182,8 @@ from pathlib import Path
 import numpy as np
 import cv2
 import matplotlib.pyplot as plt
+# from tensorflow import keras
+# from keras import datasets, layers, models Keep these just in case bandaid doesn't work
 from tensorflow.keras.models import load_model
 from tensorflow.keras import models
 
@@ -314,7 +316,7 @@ def ddos_classifier():
     st.write("Provide the input values for the **Top 10 SHAP Features** below:")
 
     # Load saved model and scaler
-    model = load_model("models/transformer_top10_model.h5")
+    model = load_model( models_dir /"transformer_top10_model.h5")
     with open(models_dir/"scaler_ddos.pkl", "rb") as f:
         scaler = pickle.load(f)
     with open(models_dir/"top10_features.pkl", "rb") as f:
