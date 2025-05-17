@@ -289,8 +289,8 @@ def home_page():
         with st.container():
             st.markdown('<div class="feature-box">', unsafe_allow_html=True)
             st.image("enhancer.png", width=60)
-            st.markdown('<div class="feature-title">Ransika Component</div>', unsafe_allow_html=True)
-            st.markdown('<div class="feature-desc">Upscale galaxy images using deep learning GANs.</div>', unsafe_allow_html=True)
+            st.markdown('<div class="feature-title">Camera Spoofing Adversarial Attacks Detection</div>', unsafe_allow_html=True)
+            st.markdown('<div class="feature-desc">Enhancing CNN Robustness with Spatial-Domain Denoising in Self-Driving Systems.</div>', unsafe_allow_html=True)
             if st.button("Explore Enhancer", key="enhancer"):
                 st.session_state['nav'] = "Ransika"
             st.markdown('</div>', unsafe_allow_html=True)
