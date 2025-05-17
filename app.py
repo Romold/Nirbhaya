@@ -656,7 +656,7 @@ def image_enhancer():
         </style>
     """, unsafe_allow_html=True)
 
-    st.markdown('<h1 class="glow">Camera Spoofing Adversarial Attacks Detection</h1>', unsafe_allow_html=True)
+    st.markdown('<h1 class="glow" style="color:white;">Camera Spoofing Adversarial Attacks Detection</h1>', unsafe_allow_html=True)
     st.markdown('<p style="text-align: center; font-size: 20px; color: white;">Enhancing CNN Robustness with Spatial-Domain Denoising in Self-Driving Systems</p>', unsafe_allow_html=True)
 
     # Sidebar for parameters
@@ -696,15 +696,17 @@ def image_enhancer():
         col1, col2 = st.columns(2)
 
         with col1:
-            st.markdown('<div class="result-box">', unsafe_allow_html=True)
-            st.markdown('<b>Prediction Before Denoising</b>', unsafe_allow_html=True)
-            st.write(f"**Class**: {label_before}")
-            st.write(f"**Confidence**: {confidence_before:.2f}%")
+            st.markdown('<div class="result-box" >', unsafe_allow_html=True)
+            st.markdown('<b style="color:white;">Prediction Before Denoising</b>', unsafe_allow_html=True)
+            st.markdown(f'<p style="color:white;"><b>Class</b>: {label_before}</p>', unsafe_allow_html=True)
+            st.markdown(f'<p style="color:white;"><b>Confidence</b>: {confidence_before:.2f}%</p>', unsafe_allow_html=True)
+            #st.write(f"**Class**: {label_before}")
+            #st.write(f"**Confidence**: {confidence_before:.2f}%")
             st.markdown('</div>', unsafe_allow_html=True)
 
         with col2:
             st.markdown('<div class="result-box">', unsafe_allow_html=True)
-            st.markdown('<b>Denoising Stack Predictions</b>', unsafe_allow_html=True)
+            st.markdown('<b style="color:white;">Denoising Stack Predictions</b>', unsafe_allow_html=True)
             algorithms = [
                 "Fast Non-Local Means",
                 "Midpoint Filter",
@@ -714,17 +716,20 @@ def image_enhancer():
                 "Alpha-Trimmed Mean"
             ]
             for algo, output in zip(algorithms, denoising_outputs):
-                st.write(f"**{algo}**: {output}")
+                st.markdown(f'<p style="color:white;"><b>{algo}</b>: {output}</p>', unsafe_allow_html=True)
+                #st.write(f"**{algo}**: {output}")
             st.markdown('</div>', unsafe_allow_html=True)
 
         st.markdown('<div class="result-box">', unsafe_allow_html=True)
-        st.markdown('<b>Majority Voted Prediction</b>', unsafe_allow_html=True)
-        st.write(f"**Class**: {label_after}")
+        st.markdown('<b style="color:white;">Majority Voted Prediction</b>', unsafe_allow_html=True)
+        st.markdown(f'<p style="color:white;"><b>Class</b>: {label_after}</p>', unsafe_allow_html=True)
+        #st.write(f"**Class**: {label_after}")
         st.markdown('</div>', unsafe_allow_html=True)
 
         st.markdown('<div class="result-box">', unsafe_allow_html=True)
-        st.markdown('<b>Final Classification</b>', unsafe_allow_html=True)
-        st.markdown(f"**Status**: {final_status}")
+        st.markdown('<b style="color:white;">Final Classification</b>', unsafe_allow_html=True)
+        st.markdown(f'<p style="color:white;"><b>Status</b>: {final_status}</p>', unsafe_allow_html=True)
+        #st.markdown(f"**Status**: {final_status}")
         st.markdown('</div>', unsafe_allow_html=True)
 
         st.markdown(f'<p style="display:none">Artifact ID: {artifact_id}</p>', unsafe_allow_html=True)
