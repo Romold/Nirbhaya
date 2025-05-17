@@ -185,6 +185,17 @@ from keras import datasets, layers, models
 import numpy as np
 import pickle
 
+import torch
+import torchvision.models as models
+from torchvision import transforms
+from PIL import Image
+import requests
+import torch.nn.functional as F
+from collections import Counter
+import cv2
+import uuid
+
+
 # Set page config
 st.set_page_config(
     page_title="Nirbhayaa",
@@ -470,11 +481,262 @@ def globular_clusters():
     if st.button("🔙 Back to Home"):
         st.session_state['nav'] = "Home"
 
+
+
+
+### camera spoofing adversarial attacks detection component------------------------------------------------------------------------------
+
+# Cache ImageNet labels
+@st.cache_data
+def download_imagenet_classes():
+    url = "https://raw.githubusercontent.com/pytorch/hub/master/imagenet_classes.txt"
+    response = requests.get(url)
+    return [line.strip() for line in response.text.splitlines()]
+
+# Cache GoogleNet model
+@st.cache_resource
+def load_googlenet():
+    model = models.googlenet(pretrained=True)
+    model.eval()
+    return model
+
+# Initialize global variables
+labels = download_imagenet_classes()
+googlenet = load_googlenet()
+preprocess = transforms.Compose([
+    transforms.Resize((224, 224)),
+    transforms.ToTensor(),
+    transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+])
+
+# Denoising Algorithms
+def fast_non_local_means_denoising_algorithm(image):
+    denoised_image = cv2.fastNlMeansDenoisingColored(image, None, 10, 10, 7, 21)
+    denoised_image = Image.fromarray(denoised_image)
+    denoised_tensor = preprocess(denoised_image).unsqueeze(0)
+    with torch.no_grad():
+        output = googlenet(denoised_tensor)
+        predicted_idx = output.argmax().item()
+    return labels[predicted_idx]
+
+def midpoint_filter(image, kernel_size=3):
+    H, W, C = image.shape
+    pad = kernel_size // 2
+    filtered_image = np.zeros_like(image, dtype=np.float32)
+    for ch in range(C):
+        padded_channel = cv2.copyMakeBorder(image[:, :, ch], pad, pad, pad, pad, cv2.BORDER_REPLICATE)
+        for i in range(H):
+            for j in range(W):
+                region = padded_channel[i:i + kernel_size, j:j + kernel_size].flatten()
+                min_val = np.min(region)
+                max_val = np.max(region)
+                midpoint_value = (min_val + max_val) / 2
+                filtered_image[i, j, ch] = midpoint_value
+    filtered_image = filtered_image.astype(np.uint8)
+    clean_image = Image.fromarray(filtered_image)
+    clean_tensor = preprocess(clean_image).unsqueeze(0)
+    with torch.no_grad():
+        output = googlenet(clean_tensor)
+        predicted_idx = output.argmax().item()
+    return labels[predicted_idx]
+
+def bilateral_filtering_algorithm(image):
+    clean_image = cv2.bilateralFilter(image, d=15, sigmaColor=75, sigmaSpace=75)
+    clean_image = Image.fromarray(clean_image)
+    clean_tensor = preprocess(clean_image).unsqueeze(0)
+    with torch.no_grad():
+        output = googlenet(clean_tensor)
+        predicted_idx = output.argmax().item()
+    return labels[predicted_idx]
+
+def geometric_mean_filter(img, kernel_size=3):
+    pad = kernel_size // 2
+    padded_img = cv2.copyMakeBorder(img, pad, pad, pad, pad, cv2.BORDER_REPLICATE)
+    filtered_img = np.zeros_like(img, dtype=np.float32)
+    for i in range(img.shape[0]):
+        for j in range(img.shape[1]):
+            window = padded_img[i:i+kernel_size, j:j+kernel_size].flatten()
+            product = np.prod(window)
+            geom_mean = product ** (1 / len(window))
+            filtered_img[i, j] = geom_mean
+    return filtered_img.astype(np.uint8)
+
+def geometric_mean_filter_color(image, kernel_size=3):
+    b, g, r = cv2.split(image)
+    b_filtered = geometric_mean_filter(b, kernel_size)
+    g_filtered = geometric_mean_filter(g, kernel_size)
+    r_filtered = geometric_mean_filter(r, kernel_size)
+    filtered_image = cv2.merge([b_filtered, g_filtered, r_filtered])
+    clean_image = Image.fromarray(filtered_image)
+    clean_tensor = preprocess(clean_image).unsqueeze(0)
+    with torch.no_grad():
+        output = googlenet(clean_tensor)
+        predicted_idx = output.argmax().item()
+    return labels[predicted_idx]
+
+def gaussian_blur_denoising_algorithm(image):
+    clean_image = cv2.GaussianBlur(image, (15, 15), 0)
+    clean_image = Image.fromarray(clean_image)
+    clean_tensor = preprocess(clean_image).unsqueeze(0)
+    with torch.no_grad():
+        output = googlenet(clean_tensor)
+        predicted_idx = output.argmax().item()
+    return labels[predicted_idx]
+
+def alpha_trimmed_mean_filter(image, kernel_size=3, alpha=2):
+    H, W, C = image.shape
+    pad = kernel_size // 2
+    filtered_image = np.zeros_like(image, dtype=np.float32)
+    for ch in range(C):
+        padded_channel = cv2.copyMakeBorder(image[:, :, ch], pad, pad, pad, pad, cv2.BORDER_REPLICATE)
+        for i in range(H):
+            for j in range(W):
+                region = padded_channel[i:i + kernel_size, j:j + kernel_size].flatten()
+                region_sorted = np.sort(region)
+                trimmed_region = region_sorted[alpha:-alpha] if alpha > 0 else region_sorted
+                filtered_image[i, j, ch] = np.mean(trimmed_region)
+    filtered_image = filtered_image.astype(np.uint8)
+    clean_image = Image.fromarray(filtered_image)
+    clean_tensor = preprocess(clean_image).unsqueeze(0)
+    with torch.no_grad():
+        output = googlenet(clean_tensor)
+        predicted_idx = output.argmax().item()
+    return labels[predicted_idx]
+
+# Object label before denoising
+def object_label_before_denoising_func(image):
+    image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+    image = Image.fromarray(image)
+    img_tensor = preprocess(image).unsqueeze(0)
+    with torch.no_grad():
+        output = googlenet(img_tensor)
+        probabilities = F.softmax(output, dim=1)
+        confidence, predicted_idx = torch.max(probabilities, dim=1)
+    return labels[predicted_idx.item()], confidence.item() * 100
+
+# Denoising stack
+def denoising_stack(image, kernel_size=3, alpha=2):
+    outputs = []
+    outputs.append(fast_non_local_means_denoising_algorithm(image))
+    outputs.append(midpoint_filter(image, kernel_size))
+    outputs.append(bilateral_filtering_algorithm(image))
+    outputs.append(geometric_mean_filter_color(image, kernel_size))
+    outputs.append(gaussian_blur_denoising_algorithm(image))
+    outputs.append(alpha_trimmed_mean_filter(image, kernel_size, alpha))
+    return outputs
+
+# Majority voting
+def majority_voting(denoising_stack_output):
+    if not denoising_stack_output:
+        return None
+    counter = Counter(denoising_stack_output)
+    return counter.most_common(1)[0][0]
+
+# Adversarial object detection
+def adversarial_object_detection(label_before, label_after):
+    return "Clean Object Detected!!!" if label_before == label_after else "Adversarial Object Detected!!!"
+
 def image_enhancer():
-    st.title("Ransika")
-    st.write("🔍 This is a placeholder for the GAN-based enhancer.")
+    st.markdown("""
+        <style>
+        .result-box {
+            background-color: rgba(0, 0, 0, 0.7);
+            border: 2px solid #00f0ff;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 10px 0;
+            color: white;
+        }
+        .subheader {
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+            text-shadow: 0 0 5px #00f0ff;
+        }
+        </style>
+    """, unsafe_allow_html=True)
+
+    st.markdown('<h1 class="glow">Camera Spoofing Adversarial Attacks Detection</h1>', unsafe_allow_html=True)
+    st.markdown('<p style="text-align: center; font-size: 20px; color: white;">Enhancing CNN Robustness with Spatial-Domain Denoising in Self-Driving Systems</p>', unsafe_allow_html=True)
+
+    # Sidebar for parameters
+    with st.sidebar:
+        st.markdown('<div class="feature-box">', unsafe_allow_html=True)
+        st.markdown('<div class="feature-title">Configuration</div>', unsafe_allow_html=True)
+        kernel_size = st.slider("Kernel Size for Filters", min_value=3, max_value=7, value=3, step=2)
+        alpha = st.slider("Alpha for Alpha-Trimmed Mean Filter", min_value=0, max_value=4, value=2)
+        st.markdown('</div>', unsafe_allow_html=True)
+
+    # Image upload
+    st.markdown('<div class="subheader">Upload Image</div>', unsafe_allow_html=True)
+    uploaded_file = st.file_uploader("Choose an image (JPG, PNG)", type=["jpg", "jpeg", "png"], key="enhancer_uploader")
+
+    if uploaded_file is not None:
+        # Generate unique artifact ID
+        artifact_id = str(uuid.uuid4())
+
+        # Display uploaded image
+        image = Image.open(uploaded_file).convert("RGB")
+        st.image(image, caption="Uploaded Image", width=300)
+
+        # Convert to OpenCV format
+        image_np = np.array(image)
+        image_cv = cv2.cvtColor(image_np, cv2.COLOR_RGB2BGR)
+
+        # Run pipeline
+        with st.spinner("Processing image..."):
+            label_before, confidence_before = object_label_before_denoising_func(image_cv)
+            denoising_outputs = denoising_stack(image_cv, kernel_size, alpha)
+            label_after = majority_voting(denoising_outputs)
+            final_status = adversarial_object_detection(label_before, label_after)
+
+        # Display results
+        st.markdown('<div class="subheader">Results</div>', unsafe_allow_html=True)
+
+        col1, col2 = st.columns(2)
+
+        with col1:
+            st.markdown('<div class="result-box">', unsafe_allow_html=True)
+            st.markdown('<b>Prediction Before Denoising</b>', unsafe_allow_html=True)
+            st.write(f"**Class**: {label_before}")
+            st.write(f"**Confidence**: {confidence_before:.2f}%")
+            st.markdown('</div>', unsafe_allow_html=True)
+
+        with col2:
+            st.markdown('<div class="result-box">', unsafe_allow_html=True)
+            st.markdown('<b>Denoising Stack Predictions</b>', unsafe_allow_html=True)
+            algorithms = [
+                "Fast Non-Local Means",
+                "Midpoint Filter",
+                "Bilateral Filter",
+                "Geometric Mean Filter",
+                "Gaussian Blur",
+                "Alpha-Trimmed Mean"
+            ]
+            for algo, output in zip(algorithms, denoising_outputs):
+                st.write(f"**{algo}**: {output}")
+            st.markdown('</div>', unsafe_allow_html=True)
+
+        st.markdown('<div class="result-box">', unsafe_allow_html=True)
+        st.markdown('<b>Majority Voted Prediction</b>', unsafe_allow_html=True)
+        st.write(f"**Class**: {label_after}")
+        st.markdown('</div>', unsafe_allow_html=True)
+
+        st.markdown('<div class="result-box">', unsafe_allow_html=True)
+        st.markdown('<b>Final Classification</b>', unsafe_allow_html=True)
+        st.markdown(f"**Status**: {final_status}")
+        st.markdown('</div>', unsafe_allow_html=True)
+
+        st.markdown(f'<p style="display:none">Artifact ID: {artifact_id}</p>', unsafe_allow_html=True)
+
+    else:
+        st.markdown('<p style="color: white;">Please upload an image to start the classification.</p>', unsafe_allow_html=True)
+
     if st.button("🔙 Back to Home"):
         st.session_state['nav'] = "Home"
+
+
+###------------------------------------------------------------------------------------------------------------------------------
 
 # Load background + route based on nav
 add_bg_from_local("background.png")
