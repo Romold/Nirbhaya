@@ -7,3 +7,10 @@ scikit-learn
 matplotlib
 seaborn
 shap
+
+
+torch==2.3.0 
+torchvision==0.18.0  
+opencv-python==4.9.0.80 
+requests==2.31.0 
+scipy==1.13.0
