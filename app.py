@@ -183,7 +183,23 @@ import streamlit as st
 from tensorflow import keras
 from keras import datasets, layers, models
 import numpy as np
-import pickle
+import cv2
+import matplotlib.pyplot as plt
+# from tensorflow import keras
+# from keras import datasets, layers, models Keep these just in case bandaid doesn't work
+from tensorflow.keras.models import load_model
+from tensorflow.keras import models
+
+import torch
+import torchvision.models as models
+from torchvision import transforms
+from PIL import Image
+import requests
+import torch.nn.functional as F
+from collections import Counter
+import cv2
+import uuid
+
 
 # Set page config
 st.set_page_config(
@@ -340,12 +356,12 @@ def ddos_classifier():
         st.markdown("<h1 style='text-align:center;'>DDoS Detection System 🚀</h1>", unsafe_allow_html=True)
         st.markdown("<h4 style='text-align:center;'>Provide the input values for the Top 10 SHAP Features below:</h4>", unsafe_allow_html=True)
 
-        # Load model & data
-        model = models.load_model(models_dir / "transformer_top10_model.h5")
-        with open(models_dir / "scaler_ddos.pkl", "rb") as f:
-            scaler = pickle.load(f)
-        with open(models_dir / "top10_features.pkl", "rb") as f:
-            top_10_feature_names = pickle.load(f)
+    # Load saved model and scaler
+    model = load_model( models_dir /"transformer_top10_model.h5")
+    with open(models_dir/"scaler_ddos.pkl", "rb") as f:
+        scaler = pickle.load(f)
+    with open(models_dir/"top10_features.pkl", "rb") as f:
+        top_10_feature_names = pickle.load(f)
 
         # Inputs
         user_input = {}
