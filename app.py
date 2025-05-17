@@ -179,11 +179,11 @@ import smtplib
 from email.message import EmailMessage
 import os
 from pathlib import Path
-import streamlit as st
-from tensorflow import keras
-from keras import datasets, layers, models
 import numpy as np
-import pickle
+import cv2
+import matplotlib.pyplot as plt
+from tensorflow.keras.models import load_model
+from tensorflow.keras import models
 
 import torch
 import torchvision.models as models
@@ -314,7 +314,7 @@ def ddos_classifier():
     st.write("Provide the input values for the **Top 10 SHAP Features** below:")
 
     # Load saved model and scaler
-    model = models.load_model("models/transformer_top10_model.h5")
+    model = load_model("models/transformer_top10_model.h5")
     with open(models_dir/"scaler_ddos.pkl", "rb") as f:
         scaler = pickle.load(f)
     with open(models_dir/"top10_features.pkl", "rb") as f:
@@ -474,10 +474,122 @@ def anomaly_detection():
         except Exception as e:
             st.error(f"❌ Failed to send email: {e}")
 
+##Lidar_Spoofing_Detection
+def Lidar_Spoofing_Detection():
+    st.title("🚗 LiDAR Spoofing Detection")
 
-def globular_clusters():
-    st.title("Pasindu")
-    st.write("✨ This is a placeholder for the globular analysis page.")
+    UPLOAD_FOLDER = "uploads"
+    RESULT_FOLDER = "static/results"
+    os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+    os.makedirs(RESULT_FOLDER, exist_ok=True)
+
+    model1 = load_model(str(models_dir / "classification_autoencoder_test1.keras"))
+    model2 = load_model(str(models_dir / "jammed_classification_autoencoder_test1.keras"))
+    
+
+
+    def load_point_cloud(bin_path):
+        point_cloud = np.fromfile(bin_path, dtype=np.float32).reshape(-1, 4)
+        return point_cloud[:, :3]
+
+    def point_cloud_to_height_bev(point_cloud, res=0.1, x_range=(-50, 50), y_range=(-50, 50), z_range=(-2, 2)):
+        x_min, x_max = x_range
+        y_min, y_max = y_range
+        z_min, z_max = z_range
+
+        mask = (point_cloud[:, 0] >= x_min) & (point_cloud[:, 0] <= x_max) & \
+               (point_cloud[:, 1] >= y_min) & (point_cloud[:, 1] <= y_max) & \
+               (point_cloud[:, 2] >= z_min) & (point_cloud[:, 2] <= z_max)
+        filtered_pc = point_cloud[mask]
+
+        x_img = ((filtered_pc[:, 0] - x_min) / res).astype(np.int32)
+        y_img = ((filtered_pc[:, 1] - y_min) / res).astype(np.int32)
+
+        bev_size_x = int((x_max - x_min) / res)
+        bev_size_y = int((y_max - y_min) / res)
+
+        bev_img = np.zeros((bev_size_y, bev_size_x))
+        norm_heights = (filtered_pc[:, 2] - z_min) / (z_max - z_min)
+
+        x_img = np.clip(x_img, 0, bev_size_x - 1)
+        y_img = np.clip(y_img, 0, bev_size_y - 1)
+
+        bev_img[y_img, x_img] = norm_heights
+
+        return bev_img
+
+    def preprocess_image(image_path, target_size=(200, 200)):
+        img = cv2.imread(image_path)
+        img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+        img = cv2.resize(img, target_size)
+        img = img / 255.0
+        img = np.expand_dims(img, axis=0)
+        return img
+
+    def crop_center(img, crop_x, crop_y):
+        h, w = img.shape[:2]
+        start_x = w // 2 - (crop_x // 2)
+        start_y = h // 2 - (crop_y // 2)
+        return img[start_y:start_y+crop_y, start_x:start_x+crop_x]
+
+    def process_file(file, model, crop=False, prefix=''):
+        file_path = os.path.join(UPLOAD_FOLDER, file.name)
+        with open(file_path, "wb") as f:
+            f.write(file.getbuffer())
+
+        point_cloud = load_point_cloud(file_path)
+        bev_image = point_cloud_to_height_bev(point_cloud)
+
+        original_image_path = os.path.join(RESULT_FOLDER, f"{prefix}_original.png")
+        plt.imsave(original_image_path, bev_image, cmap="jet", origin="lower")
+
+        if crop:
+            img = cv2.imread(original_image_path)
+            cropped_img = crop_center(img, crop_x=450, crop_y=160)
+            bev_image_path = os.path.join(RESULT_FOLDER, f"{prefix}_cropped.png")
+            cv2.imwrite(bev_image_path, cropped_img)
+        else:
+            bev_image_path = original_image_path
+
+        input_image = preprocess_image(bev_image_path)
+        reconstruction, classification_output = model.predict(input_image)
+        predicted_class = np.argmax(classification_output[0])
+        label = "Spoofed" if predicted_class == 1 else "Genuine"
+
+        return bev_image_path, label
+
+    tab1, tab2 = st.tabs(["Model 1", "Model 2"])
+
+    with tab1:
+        st.subheader("Upload for Model 1 (No Cropping)")
+        file1 = st.file_uploader("Choose File 1 (.bin)", type=['bin'], key='file1')
+        file2 = st.file_uploader("Choose File 2 (.bin)", type=['bin'], key='file2')
+
+        if file1:
+            img_path, label = process_file(file1, model1, crop=False, prefix='file1')
+            st.image(img_path, caption=f"File 1 - Prediction: {label}", width=300)
+            st.success(f"Prediction: {label}")
+
+        if file2:
+            img_path, label = process_file(file2, model1, crop=False, prefix='file2')
+            st.image(img_path, caption=f"File 2 - Prediction: {label}", width=300)
+            st.success(f"Prediction: {label}")
+
+    with tab2:
+        st.subheader("Upload for Model 2 (With Cropping)")
+        file3 = st.file_uploader("Choose File 3 (.bin)", type=['bin'], key='file3')
+        file4 = st.file_uploader("Choose File 4 (.bin)", type=['bin'], key='file4')
+
+        if file3:
+            img_path, label = process_file(file3, model2, crop=False, prefix='file3')
+            st.image(img_path, caption=f"File 3 - Prediction: {label}", width=300)
+            st.success(f"Prediction: {label}")
+
+        if file4:
+            img_path, label = process_file(file4, model2, crop=False, prefix='file4')
+            st.image(img_path, caption=f"File 4 - Prediction: {label}", width=300)
+            st.success(f"Prediction: {label}")
+    
     if st.button("🔙 Back to Home"):
         st.session_state['nav'] = "Home"
 
@@ -754,6 +866,6 @@ elif app_mode == "Romold":
 elif app_mode == "Tharindu":
     anomaly_detection()
 elif app_mode == "Pasindu":
-    globular_clusters()
+    Lidar_Spoofing_Detection()
 elif app_mode == "Ransika":
     image_enhancer()
