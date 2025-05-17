@@ -314,7 +314,7 @@ def ddos_classifier():
     st.write("Provide the input values for the **Top 10 SHAP Features** below:")
 
     # Load saved model and scaler
-    model = models.load_model("models/transformer_top10_model.h5")
+    model = load_model("models/transformer_top10_model.h5")
     with open(models_dir/"scaler_ddos.pkl", "rb") as f:
         scaler = pickle.load(f)
     with open(models_dir/"top10_features.pkl", "rb") as f:
@@ -478,7 +478,6 @@ def anomaly_detection():
 def Lidar_Spoofing_Detection():
     st.title("🚗 LiDAR Spoofing Detection")
 
-    # Ensure upload/result directories exist
     UPLOAD_FOLDER = "uploads"
     RESULT_FOLDER = "static/results"
     os.makedirs(UPLOAD_FOLDER, exist_ok=True)
@@ -582,12 +581,12 @@ def Lidar_Spoofing_Detection():
         file4 = st.file_uploader("Choose File 4 (.bin)", type=['bin'], key='file4')
 
         if file3:
-            img_path, label = process_file(file3, model2, crop=True, prefix='file3')
+            img_path, label = process_file(file3, model2, crop=False, prefix='file3')
             st.image(img_path, caption=f"File 3 - Prediction: {label}", width=300)
             st.success(f"Prediction: {label}")
 
         if file4:
-            img_path, label = process_file(file4, model2, crop=True, prefix='file4')
+            img_path, label = process_file(file4, model2, crop=False, prefix='file4')
             st.image(img_path, caption=f"File 4 - Prediction: {label}", width=300)
             st.success(f"Prediction: {label}")
     
