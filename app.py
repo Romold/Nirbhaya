@@ -1,174 +1,3 @@
-# import streamlit as st
-# import base64
-
-# # Set page layout and title
-# st.set_page_config(
-#     page_title="GALACTIC-X",
-#     layout="wide",
-#     page_icon="gs-page-logo.png",
-# )
-
-# # Function to add background image (using base64 encoding)
-# def add_bg_from_local(image_file):
-#     with open(image_file, "rb") as f:
-#         encoded_string = base64.b64encode(f.read()).decode()
-#     css = f"""
-#     <style>
-#     .stApp {{
-#         background-image: url("data:image/jpg;base64,{encoded_string}");
-#         background-size: cover;
-#         background-position: center;
-#         background-repeat: no-repeat;
-#     }}
-#     </style>
-#     """
-#     st.markdown(css, unsafe_allow_html=True)
-
-# # Function to display the home page
-# # def home_page():
-# #     glowing_title = """
-# #     <style>
-# #     .glow {
-# #         font-size: 100px;
-# #         font-weight: bold;
-# #         text-align: center;
-# #         color: white;
-# #         text-shadow: 0 0 9px white, 0 0 20px #00004B, 
-# #                      0 0 20px #00004B, 0 0 20px #00004B;
-# #         margin-bottom: 0px;
-# #     }
-# #     </style>
-# #     """
-# #     st.markdown(glowing_title, unsafe_allow_html=True)
-# #     st.markdown('<h1 class="glow">GALACTIC X</h1>', unsafe_allow_html=True)
-
-# #     st.markdown(
-# #         """<p style="text-align: center; font-size: 30px;">
-# #         <b>Welcome to GALACTIC-X! Your all-in-one tool for advanced galaxy data analysis.</b></p>""",
-# #         unsafe_allow_html=True,
-# #     )
-
-# #     st.markdown(
-# #         """<h1 style="text-align: center; font-size: 50px;">What do we Provide?</h1>""",
-# #         unsafe_allow_html=True,
-# #     )
-
-# #     col1, col2, col3, col4, col5 = st.columns(5)
-
-# #     def info_box(col, icon, text):
-# #         with col:
-# #             with st.container(border=True, height=400):
-# #                 _, center, _, _, _ = st.columns(5)
-# #                 with center:
-# #                     st.image(icon, width=30)
-# #                 st.markdown(f"""
-# #                 <div style="text-align: center; font-weight: bold;">
-# #                     <p style="font-size:20px"><b>{text}</b></p>
-# #                 </div>
-# #                 """, unsafe_allow_html=True)
-
-# #     info_box(col1, "classification.png", "Dynamically predict galaxy types, redshift values, or star formation rates using machine learning.")
-# #     info_box(col2, "clustering.png", "Utilize machine learning algorithms to classify galaxies based on morphology, brightness, and color.")
-# #     info_box(col3, "globular.png", "Detect and analyze globular clusters using photometric and classification algorithms.")
-# #     info_box(col4, "enhancer.png", "Use GANs to enhance low-resolution galaxy images for better analysis.")
-# #     info_box(col5, "chatbot.png", "Ask Astronerd any astronomy-related questions with instant, accurate answers.")
-
-# # Only load the home page (no sidebar)
-# def home_page():
-#     # Inject CSS for hover effect
-#     st.markdown("""
-#         <style>
-#         .feature-box {
-#             background-color: rgba(0, 0, 0, 0.5);
-#             border: 2px solid transparent;
-#             border-radius: 15px;
-#             padding: 20px;
-#             text-align: center;
-#             transition: all 0.3s ease;
-#             height: 100%;
-#         }
-
-#         .feature-box:hover {
-#             border: 2px solid #00f0ff;
-#             box-shadow: 0 0 20px #00f0ff;
-#             transform: scale(1.03);
-#             cursor: pointer;
-#         }
-
-#         .feature-title {
-#             font-size: 20px;
-#             font-weight: bold;
-#             color: white;
-#         }
-
-#         .feature-desc {
-#             font-size: 16px;
-#             color: white;
-#         }
-
-#         </style>
-#     """, unsafe_allow_html=True)
-
-#     st.markdown('<h1 class="glow">GALACTIC X</h1>', unsafe_allow_html=True)
-#     st.markdown(
-#         """
-#         <p style="text-align: center; font-size: 30px;"><b>Welcome to GALACTIC-X! Your all-in-one tool for advanced galaxy data analysis.</b></p>
-#         """,
-#         unsafe_allow_html=True,
-#     )
-
-#     st.markdown(
-#         """
-#         <h1 style="text-align: center; font-size: 50px;">What do we Provide?</h1>
-#         """,
-#         unsafe_allow_html=True,
-#     )
-
-#     col1, col2, col3, col4 = st.columns(4)
-
-#     with col1:
-#         with st.container():
-#             st.markdown('<div class="feature-box">', unsafe_allow_html=True)
-#             st.image("classification.png", width=60)
-#             st.markdown('<div class="feature-title">Galaxy Classification</div>', unsafe_allow_html=True)
-#             st.markdown('<div class="feature-desc">Predict galaxy types and redshifts with ML models.</div>', unsafe_allow_html=True)
-#             if st.button("Explore Classifier", key="classifier"):
-#                 st.session_state['nav'] = "Romold"
-#             st.markdown('</div>', unsafe_allow_html=True)
-
-#     with col2:
-#         with st.container():
-#             st.markdown('<div class="feature-box">', unsafe_allow_html=True)
-#             st.image("clustering.png", width=60)
-#             st.markdown('<div class="feature-title">Cluster Analysis</div>', unsafe_allow_html=True)
-#             st.markdown('<div class="feature-desc">Analyze spatial clustering of galaxies and clusters.</div>', unsafe_allow_html=True)
-#             if st.button("Explore Clustering", key="clustering"):
-#                 st.session_state['nav'] = "Tharindu"
-#             st.markdown('</div>', unsafe_allow_html=True)
-
-#     with col3:
-#         with st.container():
-#             st.markdown('<div class="feature-box">', unsafe_allow_html=True)
-#             st.image("globular.png", width=60)
-#             st.markdown('<div class="feature-title">Globular Analysis</div>', unsafe_allow_html=True)
-#             st.markdown('<div class="feature-desc">Detect and study globular clusters in galaxies.</div>', unsafe_allow_html=True)
-#             if st.button("Explore Globulars", key="globular"):
-#                 st.session_state['nav'] = "Pasindu"
-#             st.markdown('</div>', unsafe_allow_html=True)
-
-#     with col4:
-#         with st.container():
-#             st.markdown('<div class="feature-box">', unsafe_allow_html=True)
-#             st.image("enhancer.png", width=60)
-#             st.markdown('<div class="feature-title">Image Enhancer</div>', unsafe_allow_html=True)
-#             st.markdown('<div class="feature-desc">Upscale galaxy images using deep learning GANs.</div>', unsafe_allow_html=True)
-#             if st.button("Explore Enhancer", key="enhancer"):
-#                 st.session_state['nav'] = "Ransika"
-#             st.markdown('</div>', unsafe_allow_html=True)
-
-# add_bg_from_local("bg-7.jpg")
-# home_page()
-
 import streamlit as st
 import base64
 import pandas as pd
@@ -189,6 +18,8 @@ import matplotlib.pyplot as plt
 # from keras import datasets, layers, models Keep these just in case bandaid doesn't work
 from tensorflow.keras.models import load_model
 from tensorflow.keras import models
+from sklearn.preprocessing import LabelEncoder
+import joblib
 
 import torch
 import torchvision.models as models
@@ -311,87 +142,218 @@ def home_page():
                 st.session_state['nav'] = "Ransika"
             st.markdown('</div>', unsafe_allow_html=True)
 
-# def ddos_classifier(): #Default background
-#     st.title("DDoS Detection System 🚀")
-#     st.write("Provide the input values for the **Top 10 SHAP Features** below:")
+# def ddos_classifier():
+#     # Sidebar Navigation (only shown inside this page)
+#     page = st.sidebar.radio("📂 Pages", ["Main", "Testing 1", "Testing 2", "Testing 3"])
 
-#     # Load saved model and scaler
-#     model = models.load_model("models/transformer_top10_model.h5")
-#     with open(models_dir/"scaler_ddos.pkl", "rb") as f:
-#         scaler = pickle.load(f)
-#     with open(models_dir/"top10_features.pkl", "rb") as f:
-#         top_10_feature_names = pickle.load(f)
+#     if page == "Main":
+#         st.markdown("<h1 style='text-align:center;'>DDoS Detection System 🚀</h1>", unsafe_allow_html=True)
+#         st.markdown("<h4 style='text-align:center;'>Provide the input values for the Top 10 SHAP Features below:</h4>", unsafe_allow_html=True)
 
-#     # User Inputs for 10 features
-#     user_input = {}
-#     for feature in top_10_feature_names:
-#         user_input[feature] = st.number_input(f"{feature}", value=0.0)
+#         # Load saved model and scaler
+#         model = load_model(models_dir / "transformer_top10_model.h5")
+#         with open(models_dir / "scaler_ddos.pkl", "rb") as f:
+#             scaler = pickle.load(f)
+#         with open(models_dir / "top10_features.pkl", "rb") as f:
+#             top_10_feature_names = pickle.load(f)
 
-#     # Predict button
-#     if st.button("🚨 Predict DDoS Attack"):
-#         # Convert to array
-#         input_values = np.array([list(user_input.values())])
-
-#         # Scale and reshape
-#         input_scaled = scaler.transform(input_values)
-#         input_reshaped = np.expand_dims(input_scaled, axis=2)
+#         # Inputs
+#         user_input = {}
+#         for feature in top_10_feature_names:
+#             user_input[feature] = st.number_input(f"{feature}", value=0.0)
 
 #         # Predict
-#         prediction = model.predict(input_reshaped)[0][0]
+#         if st.button("🚨 Predict DDoS Attack"):
+#             input_values = np.array([list(user_input.values())])
+#             input_scaled = scaler.transform(input_values)
+#             input_reshaped = np.expand_dims(input_scaled, axis=2)
+#             prediction = model.predict(input_reshaped)[0][0]
 
-#         if prediction >= 0.5:
-#             st.error(f"⚠️ DDoS Attack Detected! Probability: {prediction:.2f}")
-#         else:
-#             st.success(f"✅ Normal Traffic. Probability: {1 - prediction:.2f}")
+#             if prediction >= 0.5:
+#                 st.error(f"⚠️ DDoS Attack Detected! Probability: {prediction:.2f}")
+#             else:
+#                 st.success(f"✅ Normal Traffic. Probability: {1 - prediction:.2f}")
 
-#     # Navigation
-#     if st.button("🔙 Back to Home"):
-#         st.session_state['nav'] = "Home"
+#         if st.button("🔙 Back to Home"):
+#             st.session_state['nav'] = "Home"
+
+#     elif page == "Testing 1":
+#         st.success("🧪 Testing 1 Success")
+
+#     elif page == "Testing 2":
+#         st.success("🧪 Testing 2 Success")
+
+#     elif page == "Testing 3":
+#         st.success("🧪 Testing 3 Success")
+
+# def ddos_classifier(): ##already working code
+#     page = st.sidebar.radio("📂 Pages", [
+#         "🔮 Main (Predict)",
+#         "📊 SHAP Interpretability",
+#         "📈 Model Performance",
+#         "📚 DDoS Overview",
+#         "⚙️ Feature Engineering"
+#     ])
+
+#     if page == "🔮 Main (Predict)":
+#         st.markdown("<h1 style='text-align:center;'>DDoS Detection System 🚀</h1>", unsafe_allow_html=True)
+#         st.markdown("<h4 style='text-align:center;'>Provide the input values for the Top 10 SHAP Features below:</h4>", unsafe_allow_html=True)
+
+#         # Load model and pre-processing
+#         model = load_model(models_dir / "transformer_top10_model.h5")
+#         with open(models_dir / "scaler_ddos.pkl", "rb") as f:
+#             scaler = pickle.load(f)
+#         with open(models_dir / "top10_features.pkl", "rb") as f:
+#             top_10_feature_names = pickle.load(f)
+
+#         # Inputs
+#         user_input = {feature: st.number_input(f"{feature}", value=0.0) for feature in top_10_feature_names}
+
+#         if st.button("🚨 Predict DDoS Attack"):
+#             input_array = np.array([list(user_input.values())])
+#             scaled = scaler.transform(input_array)
+#             reshaped = np.expand_dims(scaled, axis=2)
+#             prediction = model.predict(reshaped)[0][0]
+
+#             if prediction >= 0.5:
+#                 st.error(f"⚠️ DDoS Attack Detected! Probability: {prediction:.2f}")
+#             else:
+#                 st.success(f"✅ Normal Traffic. Probability: {1 - prediction:.2f}")
+
+models_dir = Path("models")  # Update this if your path differs
 
 def ddos_classifier():
-    # Sidebar Navigation (only shown inside this page)
-    page = st.sidebar.radio("📂 Pages", ["Main", "Testing 1", "Testing 2", "Testing 3"])
+    page = st.sidebar.radio("📂 Pages", [
+        "🔮 Main (Predict)",
+        "📊 SHAP Interpretability",
+        "📈 Model Performance",
+        "📚 DDoS Overview",
+        "⚙️ Feature Engineering"
+    ])
 
-    if page == "Main":
+    if page == "🔮 Main (Predict)":
         st.markdown("<h1 style='text-align:center;'>DDoS Detection System 🚀</h1>", unsafe_allow_html=True)
-        st.markdown("<h4 style='text-align:center;'>Provide the input values for the Top 10 SHAP Features below:</h4>", unsafe_allow_html=True)
+        st.markdown("<h4 style='text-align:center;'>Upload a CSV file with features used during training:</h4>", unsafe_allow_html=True)
 
-        # Load saved model and scaler
-        model = load_model(models_dir / "transformer_top10_model.h5")
-        with open(models_dir / "scaler_ddos.pkl", "rb") as f:
-            scaler = pickle.load(f)
-        with open(models_dir / "top10_features.pkl", "rb") as f:
-            top_10_feature_names = pickle.load(f)
+        # Load model and preprocessing tools
+        model = load_model(models_dir / "my_transformer_cnn_bilstm_model.h5")
+        with open(models_dir / "scaler_ddos1.pkl", "rb") as f:
+            scaler = joblib.load(f)
 
-        # Inputs
-        user_input = {}
-        for feature in top_10_feature_names:
-            user_input[feature] = st.number_input(f"{feature}", value=0.0)
+        uploaded_file = st.file_uploader("📄 Upload CSV with input features", type=["csv"])
 
-        # Predict
-        if st.button("🚨 Predict DDoS Attack"):
-            input_values = np.array([list(user_input.values())])
-            input_scaled = scaler.transform(input_values)
-            input_reshaped = np.expand_dims(input_scaled, axis=2)
-            prediction = model.predict(input_reshaped)[0][0]
+        if uploaded_file:
+            df = pd.read_csv(uploaded_file)
 
-            if prediction >= 0.5:
-                st.error(f"⚠️ DDoS Attack Detected! Probability: {prediction:.2f}")
-            else:
-                st.success(f"✅ Normal Traffic. Probability: {1 - prediction:.2f}")
+            # Optional: Handle any categorical encodings used during training
+            for col in ['FlowID', 'SrcIP', 'DstIP']:
+                if col in df.columns:
+                    df[col] = df[col].astype("category").cat.codes
 
-        if st.button("🔙 Back to Home"):
-            st.session_state['nav'] = "Home"
+            # Drop timestamp or other unused columns, if any
+            drop_cols = ["timestamp", "Label"]  # Adjust based on what was dropped during training
+            df = df.drop(columns=[col for col in drop_cols if col in df.columns], errors='ignore')
 
-    elif page == "Testing 1":
-        st.success("🧪 Testing 1 Success")
+            # Convert to NumPy and scale
+            try:
+                input_array = df.values
+                scaled = scaler.transform(input_array)
+                reshaped = np.expand_dims(scaled, axis=2)
 
-    elif page == "Testing 2":
-        st.success("🧪 Testing 2 Success")
+                if st.button("🚨 Predict DDoS Attack"):
+                    predictions = model.predict(reshaped).flatten()
+                    for i, prediction in enumerate(predictions):
+                        if prediction >= 0.5:
+                            st.error(f"⚠️ Row {i+1}: DDoS Attack Detected! Probability: {prediction:.2f}")
+                        else:
+                            st.success(f"✅ Row {i+1}: Normal Traffic. Probability: {1 - prediction:.2f}")
+            except Exception as e:
+                st.error(f"❌ Error during prediction: {e}")
 
-    elif page == "Testing 3":
-        st.success("🧪 Testing 3 Success")
 
+
+    elif page == "📊 SHAP Interpretability":
+        st.header("📊 SHAP Interpretability")
+        st.markdown("See how each feature impacts the prediction using SHAP values.")
+
+        shap_img_path = models_dir / "shap_summary_plot.png"
+        if shap_img_path.exists():
+            st.image(str(shap_img_path), caption="SHAP Summary Plot", use_column_width=True)
+        else:
+            st.warning("SHAP visualization not found. Please generate and save `shap_summary_plot.png` in the models directory.")
+
+    elif page == "📈 Model Performance":
+        st.header("📈 Model Performance")
+        st.markdown("Below is the classification report and evaluation metrics of the model.")
+
+        # Display cached image
+        perf_img_path = models_dir / "classification_report.png"
+        if perf_img_path.exists():
+            st.image(str(perf_img_path), caption="Model Classification Report", use_column_width=True)
+        else:
+            st.warning("Classification report image not found. Please generate and save `classification_report.png` in the models directory.")
+
+    elif page == "📚 DDoS Overview":
+        st.header("📚 What is a DDoS Attack?")
+        st.markdown("""
+        - **DDoS (Distributed Denial of Service)** attacks flood a system with traffic to make it unavailable.
+        - Common types: **UDP Flood**, **SYN Flood**, **HTTP Flood**.
+        - Targeted at websites, APIs, networks, servers.
+        - Damages: **Downtime**, **data loss**, **revenue loss**, **reputation damage**.
+        - This system aims to **detect and mitigate** such attacks using **machine learning**.
+        """)
+        st.image("https://www.imperva.com/learn/wp-content/uploads/sites/13/2021/02/what-is-ddos-attack.png", use_column_width=True)
+
+    # elif page == "⚙️ Feature Engineering":
+    #     st.header("⚙️ Feature Engineering & Model Design")
+    #     st.markdown("""
+    #     Our system uses the following steps:
+
+    #     - 🔍 **Top 10 features** selected via SHAP.
+    #     - 🤖 **Transformer encoder** to transform features based on attention.
+    #     - 🧼 Standardized using `scaler_ddos.pkl`.
+    #     - 📊 Final output is classified with a dense layer.
+
+    #     **Why Transformers?**
+    #     - Captures dependencies and relations between features.
+    #     - Good generalization, especially with imbalanced or noisy data.
+    #     """)
+
+    #     perf_img_path1 = models_dir / "encoder-layer-norm.png"
+    #     st.image(str(perf_img_path1), caption="Transformer Encoder", use_column_width=True)
+
+    elif page == "⚙️ Feature Engineering":
+        st.header("⚙️ Feature Engineering & Model Design")
+
+        col1, col2 = st.columns([2, 1])  # Wider text, smaller image
+
+        with col1:
+            st.markdown("""
+            Our deep learning pipeline includes multiple powerful components designed to extract meaningful patterns from complex network traffic data.
+
+            ### 🔍 Feature Selection with SHAP
+            - We use **SHAP (SHapley Additive exPlanations)** to analyze the impact of each feature.
+            - The **Top 10 most important features** are selected and saved for focused training.
+
+            ### 🤖 Transformer Encoder Block
+            - Introduced early in the network to model **relationships between features**.
+            - Key components:
+                - **Multi-head Self-Attention**: Learns dependencies between input features.
+                - **Feedforward Layers**: Transforms attention outputs.
+                - **Residual Connections + Layer Normalization**: Helps learning and stability.
+
+            ### 🔁 Bidirectional LSTM + Attention
+            - After the transformer, we stack **Bidirectional LSTMs** to model sequence-level information.
+            - An **attention mechanism** highlights the most relevant time steps in the sequence.
+
+            ### 🧼 Standardization & Output
+            - Features are standardized using `StandardScaler` and saved (`scaler.pkl`).
+            - A final **Dense layer** produces binary classification output (attack vs normal).
+            """)
+
+        with col2:
+            perf_img_path1 = models_dir / "encoder-layer-norm.png"
+            st.image(str(perf_img_path1), caption="Transformer Encoder", use_column_width=True)
 
 
 ## Anomaly Detection Page
