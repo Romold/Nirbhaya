@@ -270,6 +270,9 @@ def ddos_classifier():
             except Exception as e:
                 st.error(f"❌ Error during prediction: {e}")
 
+        if st.button("🔙 Back to Home"):
+            st.session_state['nav'] = "Home"
+
 
 
     elif page == "📊 SHAP Interpretability":
@@ -281,6 +284,9 @@ def ddos_classifier():
             st.image(str(shap_img_path), caption="SHAP Summary Plot", use_column_width=True)
         else:
             st.warning("SHAP visualization not found. Please generate and save `shap_summary_plot.png` in the models directory.")
+    
+        if st.button("🔙 Back to Home"):
+            st.session_state['nav'] = "Home"
 
     elif page == "📈 Model Performance":
         st.header("📈 Model Performance")
@@ -303,6 +309,9 @@ def ddos_classifier():
         - This system aims to **detect and mitigate** such attacks using **machine learning**.
         """)
         st.image("https://www.imperva.com/learn/wp-content/uploads/sites/13/2021/02/what-is-ddos-attack.png", use_column_width=True)
+
+        if st.button("🔙 Back to Home"):
+            st.session_state['nav'] = "Home"
 
     # elif page == "⚙️ Feature Engineering":
     #     st.header("⚙️ Feature Engineering & Model Design")
@@ -355,6 +364,8 @@ def ddos_classifier():
             perf_img_path1 = models_dir / "encoder-layer-norm.png"
             st.image(str(perf_img_path1), caption="Transformer Encoder", use_column_width=True)
 
+        if st.button("🔙 Back to Home"):
+            st.session_state['nav'] = "Home"
 
 ## Anomaly Detection Page
 def anomaly_detection():
