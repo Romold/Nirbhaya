@@ -14,6 +14,7 @@ from keras import datasets, layers, models
 import numpy as np
 import cv2
 import matplotlib.pyplot as plt
+from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
 # from tensorflow import keras
 # from keras import datasets, layers, models Keep these just in case bandaid doesn't work
 from tensorflow.keras.models import load_model
@@ -104,41 +105,41 @@ def home_page():
 
     with col1:
         with st.container():
-            st.markdown('<div class="feature-box">', unsafe_allow_html=True)
-            st.image("classification.png", width=60)
+            #st.markdown('<div class="feature-box">', unsafe_allow_html=True)
+            st.image("ddos.png", width=60)
             st.markdown('<div class="feature-title">DDoS Classification</div>', unsafe_allow_html=True)
             st.markdown('<div class="feature-desc">Predict whether the network flow is associated with DDoS or Not.</div>', unsafe_allow_html=True)
-            if st.button("Explore Classifier", key="classifier"):
+            if st.button("Explore DDOS Classifier", key="classifier"):
                 st.session_state['nav'] = "Romold"
             st.markdown('</div>', unsafe_allow_html=True)
 
     with col2:
         with st.container():
-            st.markdown('<div class="feature-box">', unsafe_allow_html=True)
-            st.image("clustering.png", width=60)
+            #st.markdown('<div class="feature-box">', unsafe_allow_html=True)
+            st.image("anomaly.png", width=60)
             st.markdown('<div class="feature-title">Anomaly Detection System</div>', unsafe_allow_html=True)
-            st.markdown('<div class="feature-desc">Analyze Telemetry of Data and Identify Anomalies.</div>', unsafe_allow_html=True)
-            if st.button("Detect Anomalies", key="clustering"):
+            st.markdown('<div class="feature-desc">Analyze Telemetry of Data, Identify Anomalies and Send Anomaly Report.</div>', unsafe_allow_html=True)
+            if st.button("Explore Anomlay Detector", key="clustering"):
                 st.session_state['nav'] = "Tharindu"
             st.markdown('</div>', unsafe_allow_html=True)
 
     with col3:
         with st.container():
-            st.markdown('<div class="feature-box">', unsafe_allow_html=True)
-            st.image("globular.png", width=60)
-            st.markdown('<div class="feature-title">Pasindu Component</div>', unsafe_allow_html=True)
-            st.markdown('<div class="feature-desc">Detect and study globular clusters in galaxies.</div>', unsafe_allow_html=True)
-            if st.button("Explore Globulars", key="globular"):
+            #st.markdown('<div class="feature-box">', unsafe_allow_html=True)
+            st.image("lidar.png", width=60)
+            st.markdown('<div class="feature-title">LiDAR Spoofing Component</div>', unsafe_allow_html=True)
+            st.markdown('<div class="feature-desc">Identify LiDAR Sensor Spoofing Attempts In The Autonomous Vehicle.</div>', unsafe_allow_html=True)
+            if st.button("Explore Detector", key="globular"):
                 st.session_state['nav'] = "Pasindu"
             st.markdown('</div>', unsafe_allow_html=True)
 
     with col4:
         with st.container():
-            st.markdown('<div class="feature-box">', unsafe_allow_html=True)
-            st.image("enhancer.png", width=60)
-            st.markdown('<div class="feature-title">Ransika Component</div>', unsafe_allow_html=True)
-            st.markdown('<div class="feature-desc">Upscale galaxy images using deep learning GANs.</div>', unsafe_allow_html=True)
-            if st.button("Explore Enhancer", key="enhancer"):
+            #st.markdown('<div class="feature-box">', unsafe_allow_html=True)
+            st.image("camera.png", width=60)
+            st.markdown('<div class="feature-title">Camera Spoofing Component</div>', unsafe_allow_html=True)
+            st.markdown('<div class="feature-desc">Identify Camera Spoofing Adversarial Attack Attempts In The Autonomous Vehicles.</div>', unsafe_allow_html=True)
+            if st.button("Explore Detector", key="enhancer"):
                 st.session_state['nav'] = "Ransika"
             st.markdown('</div>', unsafe_allow_html=True)
 
@@ -427,6 +428,24 @@ def anomaly_detection():
         df['detected_anomaly'] = df['deviation'].abs() > acceleration_threshold
         return df
 
+    
+    def plot_confusion_matrix(df, predicted_col, title, width=5, height=4):
+        y_true = df['label']  # 0 = normal, 1 = anomaly
+        y_pred = df[predicted_col].map({False: 0, True: 1})  # Convert to 0/1
+        cm = confusion_matrix(y_true, y_pred)
+        fig, ax = plt.subplots(figsize=(width, height))
+        disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=["Normal", "Anomaly"])
+        disp.plot(ax=ax, values_format='d')
+        ax.set_title(title)
+        #st.pyplot(fig)
+
+        buf = io.BytesIO()
+        fig.savefig(buf, format="png", bbox_inches="tight")
+        buf.seek(0)
+        st.image(buf, width=500) 
+    
+    
+    
     # Composing of Email
     def send_email_with_attachment(to_email, file_data, filename):
         msg = EmailMessage()
@@ -477,11 +496,21 @@ def anomaly_detection():
         st.write("### Angle Anomalies")
         st.dataframe(angle_results.head())
 
+        if 'label' in angle_results.columns:
+            plot_confusion_matrix(angle_results, 'detected_anomaly', "Confusion Matrix - Angle")
+
         st.write("### Speed Anomalies")
         st.dataframe(speed_results.head())
 
+        if 'label' in speed_results.columns:
+            plot_confusion_matrix(speed_results, 'detected_anomaly', "Confusion Matrix - Speed")
+
+
         st.write("### Acceleration Anomalies")
         st.dataframe(acceleration_results.head())
+
+        if 'label' in acceleration_results.columns:
+            plot_confusion_matrix(acceleration_results, 'detected_anomaly', "Confusion Matrix - Acceleration")
 
         # Download
         st.download_button("📥 Download ZIP Report", zip_buffer, "anomaly_results.zip", "application/zip")
