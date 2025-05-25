@@ -225,11 +225,10 @@ models_dir = Path("models")  # Update this if your path differs
 
 def ddos_classifier():
     page = st.sidebar.radio("📂 Pages", [
-        "🔮 Main (Predict)",
-        "📊 SHAP Interpretability",
-        "📈 Model Performance",
         "📚 DDoS Overview",
-        "⚙️ Feature Engineering"
+        "📈 Model Performance",
+        "⚙️ Feature Engineering",
+        "🔮 Main (Predict)"
     ])
 
     if page == "🔮 Main (Predict)":
@@ -276,43 +275,81 @@ def ddos_classifier():
 
 
 
-    elif page == "📊 SHAP Interpretability":
-        st.header("📊 SHAP Interpretability")
-        st.markdown("See how each feature impacts the prediction using SHAP values.")
+    # elif page == "📊 SHAP Interpretability":
+    #     st.header("📊 SHAP Interpretability")
+    #     st.markdown("See how each feature impacts the prediction using SHAP values.")
 
-        shap_img_path = models_dir / "shap_summary_plot.png"
-        if shap_img_path.exists():
-            st.image(str(shap_img_path), caption="SHAP Summary Plot", use_column_width=True)
-        else:
-            st.warning("SHAP visualization not found. Please generate and save `shap_summary_plot.png` in the models directory.")
+    #     shap_img_path = models_dir / "shap_summary_plot.png"
+
+    #     if shap_img_path.exists():
+    #         st.image(str(shap_img_path), caption="SHAP Summary Plot", use_column_width=True)
+    #     else:
+    #         st.warning("SHAP visualization not found. Please generate and save `shap_summary_plot.png` in the models directory.")
     
-        if st.button("🔙 Back to Home"):
-            st.session_state['nav'] = "Home"
+    #     if st.button("🔙 Back to Home"):
+    #         st.session_state['nav'] = "Home"
 
     elif page == "📈 Model Performance":
         st.header("📈 Model Performance")
         st.markdown("Below is the classification report and evaluation metrics of the model.")
 
         # Display cached image
-        perf_img_path = models_dir / "classification_report.png"
+        perf_img_path = models_dir / "classification_ddos.png"
         if perf_img_path.exists():
             st.image(str(perf_img_path), caption="Model Classification Report", use_column_width=True)
         else:
             st.warning("Classification report image not found. Please generate and save `classification_report.png` in the models directory.")
 
+        if st.button("🔙 Back to Home"):
+                st.session_state['nav'] = "Home"
+
+    # elif page == "📚 DDoS Overview":
+    #     st.header("📚 What is a DDoS Attack?")
+    #     st.markdown("""
+    #     - **DDoS (Distributed Denial of Service)** attacks flood a system with traffic to make it unavailable.
+    #     - Common types: **UDP Flood**, **SYN Flood**, **HTTP Flood**.
+    #     - Targeted at websites, APIs, networks, servers.
+    #     - Damages: **Downtime**, **data loss**, **revenue loss**, **reputation damage**.
+    #     - This system aims to **detect and mitigate** such attacks using **machine learning**.
+    #     """)
+
+    #     if st.button("🔙 Back to Home"):
+    #         st.session_state['nav'] = "Home"
     elif page == "📚 DDoS Overview":
-        st.header("📚 What is a DDoS Attack?")
+        st.header("🚨 Understanding DDoS Attacks")
+
         st.markdown("""
-        - **DDoS (Distributed Denial of Service)** attacks flood a system with traffic to make it unavailable.
-        - Common types: **UDP Flood**, **SYN Flood**, **HTTP Flood**.
-        - Targeted at websites, APIs, networks, servers.
-        - Damages: **Downtime**, **data loss**, **revenue loss**, **reputation damage**.
-        - This system aims to **detect and mitigate** such attacks using **machine learning**.
+        ## 🌐 What is a DDoS Attack?
+
+        A **Distributed Denial of Service (DDoS)** attack occurs when multiple systems overwhelm a target (like a website or server) with a flood of traffic, causing it to slow down or crash completely.
+
+        ---
+
+        ### 💣 Common Types of DDoS Attacks:
+        - 🔸 **UDP Flood**: Overloads systems with User Datagram Protocol packets.
+        - 🔸 **SYN Flood**: Exploits the handshake process in TCP connections.
+        - 🔸 **HTTP Flood**: Mimics legitimate web traffic to exhaust server resources.
+
+        ---
+
+        ### 🎯 Typical Targets:
+        - 🖥️ Websites and web applications  
+        - 🌐 APIs and backend systems  
+        - 🧠 Networks and DNS servers  
+
+        ---
+
+        ### 🧨 Consequences of a DDoS Attack:
+        - ❌ **Downtime** – service becomes unavailable to users  
+        - 📉 **Revenue loss** – especially during peak traffic  
+        - 🔓 **Data loss** – if coupled with a breach  
+        - 💔 **Reputation damage** – loss of user trust  
+
         """)
-        st.image("https://www.imperva.com/learn/wp-content/uploads/sites/13/2021/02/what-is-ddos-attack.png", use_column_width=True)
 
         if st.button("🔙 Back to Home"):
             st.session_state['nav'] = "Home"
+
 
     # elif page == "⚙️ Feature Engineering":
     #     st.header("⚙️ Feature Engineering & Model Design")
